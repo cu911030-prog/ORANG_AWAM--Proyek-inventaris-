@@ -2,71 +2,71 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BarangRequest;
+use App\Models\Barang;
 use Illuminate\Http\Request;
-use App\Models\Barang; // Memudahkan penulisan model
 
 class BarangController extends Controller
 {
-    
     public function index(Request $request)
     {
         $query = $request->input('search');
 
-        // Mengambil semua data barang
         $barangs = Barang::when($query, function ($q) use ($query) {
             return $q->where('kode_barang', 'like', "%{$query}%")
-                     ->orWhere('nama_barang', 'like', "%{$query}%");
-        })->get();
-        
+                ->orWhere('nama_barang', 'like', "%{$query}%");
+        })->latest()->get();
+
         return view('Barang.index', compact('barangs'));
     }
 
     public function create()
     {
-        return view('Barang.create');
+        return view('Barang.create', [
+            'barang' => new Barang(),
+            'kategoriOptions' => [
+                ['id' => 1, 'nama' => 'Elektronik'],
+                ['id' => 2, 'nama' => 'Furniture'],
+                ['id' => 3, 'nama' => 'ATK'],
+            ],
+            'satuanOptions' => [
+                ['id' => 1, 'nama' => 'Pcs'],
+                ['id' => 2, 'nama' => 'Box'],
+                ['id' => 3, 'nama' => 'Kg'],
+            ],
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(BarangRequest $request)
     {
-        $request->validate([
-            'kode_barang' => 'required',
-            'nama_barang' => 'required',
-            'stok'        => 'required|numeric',
-            'harga'       => 'required|numeric',
-            'kategori_id' => 'required',
-            'satuan_id'   => 'required',
-        ]);
-
-        Barang::create($request->all());
+        Barang::create($request->validated());
 
         return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambah!');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $barang = Barang::findOrFail($id);
-        return view('Barang.edit', compact('barang'));
+
+        return view('Barang.edit', [
+            'barang' => $barang,
+            'kategoriOptions' => [
+                ['id' => 1, 'nama' => 'Elektronik'],
+                ['id' => 2, 'nama' => 'Furniture'],
+                ['id' => 3, 'nama' => 'ATK'],
+            ],
+            'satuanOptions' => [
+                ['id' => 1, 'nama' => 'Pcs'],
+                ['id' => 2, 'nama' => 'Box'],
+                ['id' => 3, 'nama' => 'Kg'],
+            ],
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(BarangRequest $request, string $id)
     {
-        $request->validate([
-            'kode_barang' => 'required',
-            'nama_barang' => 'required',
-            'stok'        => 'required|numeric',
-            'harga'       => 'required|numeric',
-            'kategori_id' => 'required',
-            'satuan_id'   => 'required',
-        ]);
-
         $barang = Barang::findOrFail($id);
-        $barang->update($request->all());
+        $barang->update($request->validated());
 
         return redirect()->route('barang.index')->with('success', 'Barang berhasil diupdate!');
     }
