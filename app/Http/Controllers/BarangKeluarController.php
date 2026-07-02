@@ -6,6 +6,7 @@ use App\Models\Barang;
 use App\Models\BarangKeluar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class BarangKeluarController extends Controller
 {
@@ -45,18 +46,20 @@ class BarangKeluarController extends Controller
             'items.*.jumlah' => 'required|integer|min:1',
         ]);
 
-        DB::transaction(function () use ($data) {
+        DB::transaction(function () use ($data, $request) {
             $barangKeluar = BarangKeluar::create([
                 'nomor_transaksi' => $data['nomor_transaksi'],
                 'tanggal_keluar' => $data['tanggal_keluar'],
                 'keterangan' => $data['keterangan'] ?? null,
             ]);
 
-            foreach ($data['items'] as $item) {
+            foreach ($data['items'] as $index => $item) {
                 $barang = Barang::lockForUpdate()->findOrFail($item['barang_id']);
 
                 if ($barang->stok < $item['jumlah']) {
-                    throw new \Exception('Stok ' . $barang->nama_barang . ' tidak mencukupi');
+                    throw ValidationException::withMessages([
+                        "items.{$index}.jumlah" => "Stok untuk barang {$barang->nama_barang} hanya {$barang->stok}.",
+                    ]);
                 }
 
                 $barangKeluar->details()->create([
