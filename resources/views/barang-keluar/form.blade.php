@@ -62,14 +62,18 @@
     <button type="submit">Simpan</button>
 </form>
 
-<script>
-    const barangs = @json($barangs->map(function ($barang) {
+@php
+    $jsonBarangs = $barangs->map(function ($barang) {
         return [
             'id' => $barang->id,
             'label' => $barang->kode_barang . ' - ' . $barang->nama_barang . ' (' . ($barang->satuan->nama ?? '') . ')',
             'stok' => $barang->stok,
         ];
-    })->all());
+    })->all();
+@endphp
+
+<script>
+    const barangs = @json($jsonBarangs);
 
     const itemsTable = document.querySelector('#items-table tbody');
     const btnAddItem = document.querySelector('#btn-add-item');
