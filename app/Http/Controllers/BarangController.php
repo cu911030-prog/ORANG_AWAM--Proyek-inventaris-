@@ -37,13 +37,6 @@ class BarangController extends Controller
         ]);
     }
 
-    public function store(BarangRequest $request)
-    {
-        Barang::create($request->validated());
-
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambah!');
-    }
-
     public function edit(string $id)
     {
         $barang = Barang::findOrFail($id);
@@ -80,4 +73,32 @@ class BarangController extends Controller
     {
         //
     }
-}
+// 1. Fungsi untuk menampilkan halaman form tambah barang
+  
+
+    // 2. Fungsi untuk menyimpan data baru ke database
+    public function store(Request $request)
+    {
+        // Validasi input data
+        $request->validate([
+            'kode_barang' => 'required|unique:barangs,kode_barang',
+            'nama_barang' => 'required',
+            'stok'        => 'required|numeric',
+            'harga'       => 'required|numeric',
+        ]);
+
+        // Simpan ke database MySQL
+        Barang::create([
+            'kode_barang' => $request->kode_barang,
+            'nama_barang' => $request->nama_barang,
+            'stok'        => $request->stok,
+            'harga'       => $request->harga,
+            // Nilai sementara agar relasi database (foreign key) tidak error
+            'kategori_id' => 1, 
+            'satuan_id'   => 1,
+        ]);
+
+        // Setelah sukses, kembali ke halaman daftar barang
+        return redirect('/barang')->with('success', 'Barang berhasil ditambahkan!');
+    }
+    }
