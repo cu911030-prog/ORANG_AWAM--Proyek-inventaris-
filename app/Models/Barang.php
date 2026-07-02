@@ -15,4 +15,14 @@ class Barang extends Model
         'stok',
         'harga'
     ];
+
+    public function kategori()
+    {
+        return $this->belongsTo(Kategori::class);
+    }
+
+    public function satuan()
+    {
+        return $this->belongsTo(Satuan::class);
+    }
 }
