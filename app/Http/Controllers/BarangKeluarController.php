@@ -31,8 +31,14 @@ class BarangKeluarController extends Controller
     public function create()
     {
         $barangs = Barang::with('satuan')->orderBy('nama_barang')->get();
+        $nomorTransaksi = old('nomor_transaksi', $this->generateNomorTransaksi());
 
-        return view('barang-keluar.create', compact('barangs'));
+        return view('barang-keluar.create', compact('barangs', 'nomorTransaksi'));
+    }
+
+    protected function generateNomorTransaksi()
+    {
+        return 'TRX-' . now()->format('YmdHis') . '-' . mt_rand(100, 999);
     }
 
     public function store(Request $request)
@@ -42,7 +48,7 @@ class BarangKeluarController extends Controller
             'tanggal_keluar' => 'required|date',
             'keterangan' => 'nullable|string',
             'items' => 'required|array|min:1',
-            'items.*.barang_id' => 'required|exists:barangs,id',
+            'items.*.barang_id' => 'required|exists:barangs,id|distinct',
             'items.*.jumlah' => 'required|integer|min:1',
         ]);
 
