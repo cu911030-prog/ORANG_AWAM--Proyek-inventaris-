@@ -27,6 +27,13 @@ class BarangKeluarController extends Controller
         return view('barang-keluar.index', compact('barangKeluars'));
     }
 
+    public function create()
+    {
+        $barangs = Barang::with('satuan')->orderBy('nama_barang')->get();
+
+        return view('barang-keluar.create', compact('barangs'));
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([
