@@ -12,8 +12,17 @@ class BarangKeluar extends Model
         'keterangan'
     ];
 
-    // Relasi ke detail
+    // Relasi ke detail barang keluar
+    public function details()
     {
         return $this->hasMany(BarangKeluarDetail::class);
+    }
+
+    // Relasi many-to-many ke barang lewat pivot detail
+    public function barangs()
+    {
+        return $this->belongsToMany(Barang::class, 'barang_keluar_details')
+            ->withPivot('jumlah')
+            ->withTimestamps();
     }
 }
