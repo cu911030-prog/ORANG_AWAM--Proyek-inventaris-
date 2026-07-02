@@ -9,8 +9,16 @@ class SatuanSeeder extends Seeder
 {
     public function run(): void
     {
-        Satuan::create(['nama' => 'Pcs']);
-        Satuan::create(['nama' => 'Box']);
-        Satuan::create(['nama' => 'Pack']);
+        $satuans = [
+            ['nama' => 'pcs'],
+            ['nama' => 'kg'],
+            ['nama' => 'liter'],
+            ['nama' => 'box'],
+            ['nama' => 'lusin'],
+        ];
+
+        foreach ($satuans as $satuan) {
+            Satuan::updateOrCreate(['nama' => $satuan['nama']], $satuan);
+        }
     }
 }

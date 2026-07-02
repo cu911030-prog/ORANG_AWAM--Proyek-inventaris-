@@ -13,7 +13,16 @@ class KategoriSeeder extends Seeder
      */
     public function run(): void
     {
-        // Di sinilah kodenya diletakkan
-        Kategori::create(['nama' => 'Elektronik']);
+        $kategoris = [
+            ['nama' => 'Elektronik'],
+            ['nama' => 'Furniture'],
+            ['nama' => 'ATK'],
+            ['nama' => 'Makanan'],
+            ['nama' => 'Minuman'],
+        ];
+
+        foreach ($kategoris as $kategori) {
+            Kategori::updateOrCreate(['nama' => $kategori['nama']], $kategori);
+        }
     }
 }

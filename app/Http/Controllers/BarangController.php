@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BarangRequest;
 use App\Models\Barang;
+use App\Models\Kategori;
+use App\Models\Satuan;
 use Illuminate\Http\Request;
 
 class BarangController extends Controller
@@ -12,10 +14,13 @@ class BarangController extends Controller
     {
         $query = $request->input('search');
 
-        $barangs = Barang::when($query, function ($q) use ($query) {
-            return $q->where('kode_barang', 'like', "%{$query}%")
-                ->orWhere('nama_barang', 'like', "%{$query}%");
-        })->latest()->get();
+        $barangs = Barang::with(['kategori', 'satuan'])
+            ->when($query, function ($q) use ($query) {
+                return $q->where('kode_barang', 'like', "%{$query}%")
+                    ->orWhere('nama_barang', 'like', "%{$query}%");
+            })
+            ->latest()
+            ->get();
 
         return view('Barang.index', compact('barangs'));
     }
@@ -24,16 +29,8 @@ class BarangController extends Controller
     {
         return view('Barang.create', [
             'barang' => new Barang(),
-            'kategoriOptions' => [
-                ['id' => 1, 'nama' => 'Elektronik'],
-                ['id' => 2, 'nama' => 'Furniture'],
-                ['id' => 3, 'nama' => 'ATK'],
-            ],
-            'satuanOptions' => [
-                ['id' => 1, 'nama' => 'Pcs'],
-                ['id' => 2, 'nama' => 'Box'],
-                ['id' => 3, 'nama' => 'Kg'],
-            ],
+            'kategoriOptions' => Kategori::orderBy('nama')->get(),
+            'satuanOptions' => Satuan::orderBy('nama')->get(),
         ]);
     }
 
@@ -43,16 +40,8 @@ class BarangController extends Controller
 
         return view('Barang.edit', [
             'barang' => $barang,
-            'kategoriOptions' => [
-                ['id' => 1, 'nama' => 'Elektronik'],
-                ['id' => 2, 'nama' => 'Furniture'],
-                ['id' => 3, 'nama' => 'ATK'],
-            ],
-            'satuanOptions' => [
-                ['id' => 1, 'nama' => 'Pcs'],
-                ['id' => 2, 'nama' => 'Box'],
-                ['id' => 3, 'nama' => 'Kg'],
-            ],
+            'kategoriOptions' => Kategori::orderBy('nama')->get(),
+            'satuanOptions' => Satuan::orderBy('nama')->get(),
         ]);
     }
 
@@ -66,12 +55,17 @@ class BarangController extends Controller
 
     public function show(string $id)
     {
-        //
+        $barang = Barang::with(['kategori', 'satuan'])->findOrFail($id);
+
+        return view('Barang.show', compact('barang'));
     }
 
     public function destroy(string $id)
     {
-        //
+        $barang = Barang::findOrFail($id);
+        $barang->delete();
+
+        return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus!');
     }
 // 1. Fungsi untuk menampilkan halaman form tambah barang
   
