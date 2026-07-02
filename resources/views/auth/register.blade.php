@@ -1,7 +1,17 @@
 <x-guest-layout>
     <div class="mb-6 text-center">
-        <h2 class="text-2xl font-semibold text-slate-900">Daftar Sistem Inventaris Barang</h2>
-        <p class="mt-2 text-sm text-slate-500">Buat akun untuk mulai mengelola data barang Anda.</p>
+        <a href="/" class="mx-auto inline-flex items-center justify-center rounded-3xl bg-slate-950 px-5 py-4 text-white shadow-lg shadow-slate-200/20 hover:bg-slate-800">
+            <x-application-logo class="w-12 h-12 text-white" />
+            <span class="ms-3 text-left">
+                <span class="block text-base font-semibold">Sistem Inventaris Barang</span>
+                <span class="block text-xs text-slate-200">Daftar untuk mulai mengelola inventaris</span>
+            </span>
+        </a>
+    </div>
+
+    <div class="mb-6 rounded-3xl bg-slate-950 p-5 text-white shadow-xl">
+        <h2 class="text-2xl font-semibold">Buat Akun Baru</h2>
+        <p class="mt-2 text-sm text-slate-300">Isi data Anda untuk mendapatkan akses ke dashboard inventaris.</p>
     </div>
 
     <form method="POST" action="{{ route('register') }}">
