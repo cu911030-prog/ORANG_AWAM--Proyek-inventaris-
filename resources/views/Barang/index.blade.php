@@ -13,6 +13,9 @@
 </head>
 <body>
     <h1>Data Barang</h1>
+    <a href="{{ route('barang.create') }}" style="padding: 8px 12px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; display: inline-block; margin-bottom: 15px; font-family: Arial, sans-serif;">
+    + Tambah Barang Baru
+</a>
 
     <div class="top-actions">
         <form action="{{ route('barang.index') }}" method="GET" style="display: flex; gap: 8px; align-items: center;">
