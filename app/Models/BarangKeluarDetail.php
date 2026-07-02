@@ -17,4 +17,10 @@ class BarangKeluarDetail extends Model
     {
         return $this->belongsTo(Barang::class);
     }
+
+    // Relasi ke transaksi barang keluar
+    public function barangKeluar()
+    {
+        return $this->belongsTo(BarangKeluar::class);
+    }
 }
