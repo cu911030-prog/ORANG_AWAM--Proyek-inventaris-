@@ -14,23 +14,37 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased bg-slate-100">
+        <div class="min-h-screen">
+            <div class="flex min-h-screen">
+                <aside class="hidden lg:block lg:w-80">
+                    @include('partials.sidebar')
+                </aside>
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+                <div class="flex-1">
+                    @include('partials.navbar')
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+                    <!-- Page Heading -->
+                    @isset($header)
+                        <header class="bg-white shadow">
+                            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                                {{ $header }}
+                            </div>
+                        </header>
+                    @endisset
+
+                    <!-- Page Content -->
+                    <main class="py-6">
+                        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                            <div class="bg-white overflow-hidden shadow-sm sm:rounded-2xl">
+                                <div class="p-6 text-slate-900">
+                                    {{ $slot }}
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
         </div>
     </body>
 </html>
