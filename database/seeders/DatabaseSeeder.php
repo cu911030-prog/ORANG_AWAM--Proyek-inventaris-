@@ -15,9 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
+    $this->call([
+        // Pastikan Kategori dan Satuan dijalankan lebih dulu
+        KategoriSeeder::class,
+        SatuanSeeder::class,
+        // Baru setelah itu Barang
         BarangSeeder::class,
         ]);
-
     }
 }
