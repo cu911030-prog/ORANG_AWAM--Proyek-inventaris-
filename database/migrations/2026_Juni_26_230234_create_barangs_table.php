@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('barangs', function (Blueprint $table) {
+    Schema::create('barangs', function (Blueprint $table) {
         $table->id();
-        $table->string('kode_barang')->unique();
-        $table->string('nama_barang');
-        $table->integer('kategori_id'); // Sementara pakai integer agar tidak error constraint
-        $table->integer('satuan_id');   // Sementara pakai integer agar tidak error constraint
-        $table->integer('stok');
-        $table->decimal('harga', 10, 2);
+        $table->string('kode_barang', 30)->unique();
+        $table->string('nama_barang', 150);
+        
+        // Menggunakan foreignId untuk membuat constraint relasi
+        $table->foreignId('kategori_id')->constrained('kategoris')->onDelete('cascade');
+        $table->foreignId('satuan_id')->constrained('satuans')->onDelete('cascade');
+        
+        $table->integer('stok')->default(0);
+        $table->decimal('harga', 15, 2)->nullable();
         $table->timestamps();
         });
     }
