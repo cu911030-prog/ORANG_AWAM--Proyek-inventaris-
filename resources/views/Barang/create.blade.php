@@ -27,16 +27,22 @@
         <label>Harga:</label><br>
         <input type="number" name="harga" value="{{ old('harga') }}"><br><br>
         
+        <!-- PENGUBAHAN KATEGORI (DINAMIS) -->
         <label>Kategori:</label><br>
-        <select name="kategori_id">
-            <option value="1">Elektronik</option>
-            <option value="2">Perabotan</option>
+        <select name="kategori_id" required>
+            <option value="">-- Pilih Kategori --</option>
+            @foreach($kategoris as $kategori)
+                <option value="{{ $kategori->id }}">{{ $kategori->nama_kategori }}</option>
+            @endforeach
         </select><br><br>
 
+        <!-- PENGUBAHAN SATUAN (DINAMIS) -->
         <label>Satuan:</label><br>
-        <select name="satuan_id">
-            <option value="1">Pcs</option>
-            <option value="2">Box</option>
+        <select name="satuan_id" required>
+            <option value="">-- Pilih Satuan --</option>
+            @foreach($satuans as $satuan)
+                <option value="{{ $satuan->id }}">{{ $satuan->nama_satuan }}</option>
+            @endforeach
         </select><br><br>
 
         <button type="submit">Simpan</button>

@@ -15,7 +15,9 @@
     
     <form action="{{ route('barang.update', $barang->id) }}" method="POST">
         @csrf
-        @method('PUT') <label>Kode Barang:</label><br>
+        @method('PUT') 
+        
+        <label>Kode Barang:</label><br>
         <input type="text" name="kode_barang" value="{{ $barang->kode_barang }}"><br><br>
         
         <label>Nama Barang:</label><br>
@@ -27,16 +29,26 @@
         <label>Harga:</label><br>
         <input type="number" name="harga" value="{{ $barang->harga }}"><br><br>
         
+        <!-- PENGUBAHAN KATEGORI (DINAMIS & SELECTED) -->
         <label>Kategori:</label><br>
-        <select name="kategori_id">
-            <option value="1" {{ $barang->kategori_id == 1 ? 'selected' : '' }}>Elektronik</option>
-            <option value="2" {{ $barang->kategori_id == 2 ? 'selected' : '' }}>Perabotan</option>
+        <select name="kategori_id" required>
+            <option value="">-- Pilih Kategori --</option>
+            @foreach($kategoris as $kategori)
+                <option value="{{ $kategori->id }}" {{ $barang->kategori_id == $kategori->id ? 'selected' : '' }}>
+                    {{ $kategori->nama_kategori }}
+                </option>
+            @endforeach
         </select><br><br>
 
+        <!-- PENGUBAHAN SATUAN (DINAMIS & SELECTED) -->
         <label>Satuan:</label><br>
-        <select name="satuan_id">
-            <option value="1" {{ $barang->satuan_id == 1 ? 'selected' : '' }}>Pcs</option>
-            <option value="2" {{ $barang->satuan_id == 2 ? 'selected' : '' }}>Box</option>
+        <select name="satuan_id" required>
+            <option value="">-- Pilih Satuan --</option>
+            @foreach($satuans as $satuan)
+                <option value="{{ $satuan->id }}" {{ $barang->satuan_id == $satuan->id ? 'selected' : '' }}>
+                    {{ $satuan->nama_satuan }}
+                </option>
+            @endforeach
         </select><br><br>
 
         <button type="submit">Update</button>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Barang; // Memudahkan penulisan model
+use App\Models\Barang; 
+use App\Models\Kategori; // Ditambahkan agar pemanggilan model lebih rapi
+use App\Models\Satuan;   // Ditambahkan agar pemanggilan model lebih rapi
 
 class BarangController extends Controller
 {
@@ -23,7 +25,11 @@ class BarangController extends Controller
 
     public function create()
     {
-        return view('Barang.create');
+        $kategoris = Kategori::all(); 
+        $satuans = Satuan::all();
+    
+        // PERBAIKAN: Menambahkan compact agar variabel terkirim ke view
+        return view('Barang.create', compact('kategoris', 'satuans'));
     }
 
     public function store(Request $request)
@@ -33,8 +39,8 @@ class BarangController extends Controller
             'nama_barang' => 'required',
             'stok'        => 'required|numeric',
             'harga'       => 'required|numeric',
-            'kategori_id' => 'required',
-            'satuan_id'   => 'required',
+            'kategori_id' => 'required|exists:kategoris,id', // Validasi diperketat agar aman
+            'satuan_id'   => 'required|exists:satuans,id',   // Validasi diperketat agar aman
         ]);
 
         Barang::create($request->all());
@@ -48,7 +54,13 @@ class BarangController extends Controller
     public function edit(string $id)
     {
         $barang = Barang::findOrFail($id);
-        return view('Barang.edit', compact('barang'));
+        
+        // PERBAIKAN: Mengambil data kategori dan satuan untuk form edit
+        $kategoris = Kategori::all();
+        $satuans = Satuan::all();
+
+        // PERBAIKAN: Mengirimkan data ke view edit
+        return view('Barang.edit', compact('barang', 'kategoris', 'satuans'));
     }
 
     /**
@@ -61,8 +73,8 @@ class BarangController extends Controller
             'nama_barang' => 'required',
             'stok'        => 'required|numeric',
             'harga'       => 'required|numeric',
-            'kategori_id' => 'required',
-            'satuan_id'   => 'required',
+            'kategori_id' => 'required|exists:kategoris,id', // Validasi diperketat agar aman
+            'satuan_id'   => 'required|exists:satuans,id',   // Validasi diperketat agar aman
         ]);
 
         $barang = Barang::findOrFail($id);
