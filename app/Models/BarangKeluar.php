@@ -19,4 +19,12 @@ class BarangKeluar extends Model
     {
         return $this->hasMany(BarangKeluarDetail::class, 'barang_keluar_id');
     }
+
+    // Relasi many-to-many ke barang lewat pivot detail
+    public function barangs()
+    {
+        return $this->belongsToMany(Barang::class, 'barang_keluar_details')
+            ->withPivot('jumlah')
+            ->withTimestamps();
+    }
 }

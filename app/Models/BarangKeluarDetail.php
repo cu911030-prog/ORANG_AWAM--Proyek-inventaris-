@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Barang;
+use App\Models\BarangKeluar;
 
 class BarangKeluarDetail extends Model
 {
@@ -16,5 +18,11 @@ class BarangKeluarDetail extends Model
     public function barang()
     {
         return $this->belongsTo(Barang::class);
+    }
+
+    // Relasi ke transaksi barang keluar
+    public function barangKeluar()
+    {
+        return $this->belongsTo(BarangKeluar::class);
     }
 }

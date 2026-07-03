@@ -19,6 +19,5 @@ class DatabaseSeeder extends Seeder
             KategoriSeeder::class,
             SatuanSeeder::class,
         ]);
-
     }
 }
