@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> // Tampilan form untuk menambahkan barang baru, dengan validasi dan pemilihan kategori serta satuan yang dinamis
 <html lang="id">
 <head>
     <meta charset="UTF-8">
