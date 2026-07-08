@@ -33,7 +33,7 @@ class BarangController extends Controller
         return view('Barang.create', compact('kategoris', 'satuans'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request) // Fungsi store hasil validasi dan pengecekan QA dari Resya
     {
         // Validasi input data dari form (Sudah termasuk mengunci kategori dan satuan)
         $request->validate([
