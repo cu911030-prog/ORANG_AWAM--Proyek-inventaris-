@@ -7,9 +7,6 @@ use App\Models\Barang;
 use App\Models\Kategori;
 use App\Models\Satuan;
 use Illuminate\Http\Request;
-use App\Models\Barang; 
-use App\Models\Kategori; // Ditambahkan agar pemanggilan model lebih rapi
-use App\Models\Satuan;   // Ditambahkan agar pemanggilan model lebih rapi
 
 class BarangController extends Controller
 {
@@ -33,47 +30,63 @@ class BarangController extends Controller
         $kategoris = Kategori::all(); 
         $satuans = Satuan::all();
     
-        // PERBAIKAN: Menambahkan compact agar variabel terkirim ke view
         return view('Barang.create', compact('kategoris', 'satuans'));
     }
 
     public function store(Request $request)
     {
+        // Validasi input data dari form (Sudah termasuk mengunci kategori dan satuan)
         $request->validate([
-            'kode_barang' => 'required',
+            'kode_barang' => 'required|unique:barangs,kode_barang',
             'nama_barang' => 'required',
             'stok'        => 'required|numeric',
             'harga'       => 'required|numeric',
-            'kategori_id' => 'required|exists:kategoris,id', // Validasi diperketat agar aman
-            'satuan_id'   => 'required|exists:satuans,id',   // Validasi diperketat agar aman
+            'kategori_id' => 'required|exists:kategoris,id', 
+            'satuan_id'   => 'required|exists:satuans,id',   
         ]);
+
+        // Simpan data asli pilihan user ke database MySQL
+        Barang::create([
+            'kode_barang' => $request->kode_barang,
+            'nama_barang' => $request->nama_barang,
+            'stok'        => $request->stok,
+            'harga'       => $request->harga,
+            'kategori_id' => $request->kategori_id, // Mengambil data pilihan dari dropdown
+            'satuan_id'   => $request->satuan_id,   // Mengambil data pilihan dari dropdown
+        ]);
+
+        return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambahkan!');
     }
 
     public function edit(string $id)
     {
         $barang = Barang::findOrFail($id);
-        
-        // PERBAIKAN: Mengambil data kategori dan satuan untuk form edit
         $kategoris = Kategori::all();
         $satuans = Satuan::all();
 
-        // PERBAIKAN: Mengirimkan data ke view edit
         return view('Barang.edit', compact('barang', 'kategoris', 'satuans'));
     }
 
-    public function update(BarangRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         $request->validate([
-            'kode_barang' => 'required',
+            'kode_barang' => 'required|unique:barangs,kode_barang,'.$id,
             'nama_barang' => 'required',
             'stok'        => 'required|numeric',
             'harga'       => 'required|numeric',
-            'kategori_id' => 'required|exists:kategoris,id', // Validasi diperketat agar aman
-            'satuan_id'   => 'required|exists:satuans,id',   // Validasi diperketat agar aman
+            'kategori_id' => 'required|exists:kategoris,id', 
+            'satuan_id'   => 'required|exists:satuans,id',   
         ]);
 
         $barang = Barang::findOrFail($id);
-        $barang->update($request->validated());
+        $barang->update([
+            'kode_barang' => $request->kode_barang,
+            'nama_barang' => $request->nama_barang,
+            'stok'        => $request->stok,
+            'harga'       => $request->harga,
+            'kategori_id' => $request->kategori_id,
+            'satuan_id'   => $request->satuan_id,
+        ]);
 
         return redirect()->route('barang.index')->with('success', 'Barang berhasil diupdate!');
     }
@@ -92,32 +105,4 @@ class BarangController extends Controller
 
         return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus!');
     }
-// 1. Fungsi untuk menampilkan halaman form tambah barang
-  
-
-    // 2. Fungsi untuk menyimpan data baru ke database
-    public function store(Request $request)
-    {
-        // Validasi input data
-        $request->validate([
-            'kode_barang' => 'required|unique:barangs,kode_barang',
-            'nama_barang' => 'required',
-            'stok'        => 'required|numeric',
-            'harga'       => 'required|numeric',
-        ]);
-
-        // Simpan ke database MySQL
-        Barang::create([
-            'kode_barang' => $request->kode_barang,
-            'nama_barang' => $request->nama_barang,
-            'stok'        => $request->stok,
-            'harga'       => $request->harga,
-            // Nilai sementara agar relasi database (foreign key) tidak error
-            'kategori_id' => 1, 
-            'satuan_id'   => 1,
-        ]);
-
-        // Setelah sukses, kembali ke halaman daftar barang
-        return redirect('/barang')->with('success', 'Barang berhasil ditambahkan!');
-    }
-    }
+}

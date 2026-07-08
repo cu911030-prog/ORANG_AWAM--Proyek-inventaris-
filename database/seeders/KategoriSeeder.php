@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Kategori;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
+use App\Models\Kategori;
 
 class KategoriSeeder extends Seeder
 {
@@ -13,19 +12,19 @@ class KategoriSeeder extends Seeder
      */
     public function run(): void
     {
-        $kategoris = [
-            'Elektronik',
-            'Alat Tulis Kantor',
-            'Pakaian',
-            'Makanan & Minuman',
-            'Perabotan'
+        // Hapus atau komentari baris truncate karena migrate:fresh sudah otomatis mengosongkan tabel
+        // Kategori::truncate();
+
+        // Data seeder kategori
+        $categories = [
+            ['nama_kategori' => 'Elektronik', 'slug' => 'elektronik'],
+            ['nama_kategori' => 'Pakaian', 'slug' => 'pakaian'],
+            ['nama_kategori' => 'Atk', 'slug' => 'atk'],
+            ['nama_kategori' => 'Makanan', 'slug' => 'makanan'],
         ];
 
-        foreach ($kategoris as $kat) {
-            Kategori::create([
-                'nama_kategori' => $kat,
-                'slug' => Str::slug($kat),
-            ]);
+        foreach ($categories as $category) {
+            Kategori::create($category);
         }
     }
 }

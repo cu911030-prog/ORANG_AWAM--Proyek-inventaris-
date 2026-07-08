@@ -9,10 +9,8 @@ class Kategori extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['nama_kategori', 'slug'];
+    protected $table = 'kategoris';
 
-    public function barangs()
-    {
-        return $this->hasMany(Barang::class);
-    }
+    // Pastikan kedua kolom ini ada di dalam fillable
+    protected $fillable = ['nama_kategori', 'slug']; 
 }
